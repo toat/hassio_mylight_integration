@@ -45,7 +45,8 @@ class InstallationDevices:
     __master_report_period: int = 60
     __virtual_device_id: str = None
     __virtual_battery_id: str = None
-    __master_relay_id: str = None
+    __master_relay_id: str | None = None
+    __water_heater_device_id: str = None
 
     @property
     def master_id(self):
@@ -98,6 +99,16 @@ class InstallationDevices:
     def master_relay_id(self, value: str):
         """Set master relay id."""
         self.__master_relay_id = value
+
+    @property
+    def water_heater_id(self):
+        """Return water heater device id."""
+        return self.__water_heater_id
+
+    @water_heater_id.setter
+    def water_heater_id(self, value: str):
+        """Set water heater id."""
+        self.__water_heater_id = value
 
 
 class Measure:
