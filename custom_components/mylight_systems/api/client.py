@@ -132,7 +132,7 @@ class MyLightApiClient:
         model = InstallationDevices()
         for device in response["devices"]:
             if device["type"] == "vrt":
-                model.virtual_device_id = device["id"]        
+                model.virtual_device_id = device["id"]
             if device["type"] == "bat":
                 model.virtual_battery_id = device["id"]
                 model.virtual_battery_capacity = device["batteryCapacity"]
