@@ -10,9 +10,12 @@ from homeassistant.components.sensor import (
     SensorEntityDescription,
     SensorStateClass,
 )
+from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import PERCENTAGE, POWER_KILO_WATT, UnitOfEnergy
+from homeassistant.core import HomeAssistant
+from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
-from .const import DOMAIN
+from .const import DOMAIN, DATA_COORDINATOR
 from .coordinator import (
     MyLightSystemsCoordinatorData,
     MyLightSystemsDataUpdateCoordinator,
@@ -145,6 +148,17 @@ MYLIGHT_SENSORS: tuple[MyLightSensorEntityDescription, ...] = (
         device_class=SensorDeviceClass.ENERGY,
         value_fn=lambda data: _calculate_grid_returned_energy(data)
     ),
+    MyLightSensorEntityDescription(
+        key="water_heater_energy",
+        name="Water heater energy",
+        icon="mdi:water-boiler",
+        native_unit_of_measurement=UnitOfEnergy.WATT_HOUR,
+        state_class=SensorStateClass.TOTAL_INCREASING,
+        device_class=SensorDeviceClass.ENERGY,
+        value_fn=lambda data: round(data.water_heater_energy.value / 36e2, 2)
+        if data.water_heater_energy is not None
+        else 0,        
+    ),
 )
 
 
@@ -166,9 +180,9 @@ def _calculate_grid_returned_energy(data):
         return 0
 
 
-async def async_setup_entry(hass, entry, async_add_devices):
+async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry, async_add_devices: AddEntitiesCallback) -> None:
     """Configure sensor platform."""
-    coordinator = hass.data[DOMAIN][entry.entry_id]
+    coordinator = hass.data[DOMAIN][entry.entry_id][DATA_COORDINATOR]
     async_add_devices(
         MyLightSystemsSensor(
             entry_id=entry.entry_id,
@@ -186,7 +200,7 @@ class MyLightSystemsSensor(IntegrationMyLightSystemsEntity, SensorEntity):
         self,
         entry_id: str,
         coordinator: MyLightSystemsDataUpdateCoordinator,
-        entity_description: SensorEntityDescription,
+        entity_description: MyLightSensorEntityDescription,
     ) -> None:
         """Init."""
         super().__init__(coordinator)
