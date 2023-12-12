@@ -130,7 +130,6 @@ class MyLightApiClient:
                 raise UnauthorizedException()
 
         model = InstallationDevices()
-        _LOGGER.debug("Devices %s",  response["devices"])
         for device in response["devices"]:
             if device["type"] == "vrt":
                 model.virtual_device_id = device["id"]        
