@@ -30,8 +30,6 @@ from .const import (
     SCAN_INTERVAL_IN_MINUTES, 
     CONF_MASTER_RELAY_ID,
     CONF_WATER_HEATER_ID,
-
-
 )
 
 
