@@ -140,7 +140,6 @@ class MyLightApiClient:
                 model.master_id = device["id"]
                 model.master_report_period = device["reportPeriod"]
             if device["type"] == "gmd" and device["deviceTypeId"] == "water_heater":
-                _LOGGER.debug("Device gmd %s", device)
                 model.water_heater_id = device["id"]                    
             if device["type"] == "sw":
                 model.master_relay_id = device["id"]
@@ -165,7 +164,6 @@ class MyLightApiClient:
                 raise UnauthorizedException()
 
         measures: list[Measure] = []
-        _LOGGER.debug("Response : %s", response)
         for value in response["measure"]["values"]:
             measures.append(
                 Measure(value["type"], value["value"], value["unit"])
